@@ -1,0 +1,14 @@
+﻿fichier;etape;outil;secondes
+01_init.sql;Reinitialiser la base;SQL;67,9
+02_clean.sql;Construire la couche propre;SQL;16,3
+03_tables_meteo.sql;Creer les tables qui attendent la meteo;SQL;0
+meteo_json;Chargement meteo Python;Python;0,3
+villes_csv;Chargement villes Python;Python;0
+04_rattachement.sql;Rattachement meteo et villes;SQL;0,1
+05_croisement.sql;Croisement sinistres et meteo;SQL;0,1
+06_controles.sql;Verifier la qualite des donnees;SQL;0
+;;;
+** REMARQUE ** Les temps sont identiques à partir de l'étape 3 (création des tables).;;;
+;;;
+Relevé du chronomètre de lundi 1h50;;;
+Ci-dessus le relevé du chronomètre devendredi.;;;
