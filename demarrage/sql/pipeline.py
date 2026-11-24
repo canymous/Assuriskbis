@@ -1,3 +1,4 @@
+# Orchestre l'exécution du pipeline ETL AssurRisk entre Python et PostgreSQL pour charger, croiser et contrôler les données de sinistres et de météo.
 import io
 import json
 import os
@@ -18,8 +19,7 @@ print("connexion ouverte")
 
 
 def ajouter_au_journal(source, libelle, outil, duree):
-  journal.append([source, libelle, outil, duree])
-
+  journal.append([source, libelle, outil, duree, "ok"])
 
 def jouer_sql(fichier, libelle):
   debut = time.time()
@@ -117,8 +117,9 @@ for fichier, libelle in etapes_apres:
 
 # Sauvegarde du journal global
 suivi = pd.DataFrame(
-    journal, columns=["fichier", "etape", "outil", "secondes"]
-)
+       journal, columns=["fichier", "etape", "outil", "secondes", "statut"]
+   )
+
 suivi.to_csv(
     "sorties/journal_pipeline.csv",
     sep=";",
