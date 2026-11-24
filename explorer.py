@@ -165,7 +165,7 @@ print(comparaison_regions)
 
 # Exercice 2
 
-
+print("Chargement terminé :", len(df), "lignes")
 
 
 
