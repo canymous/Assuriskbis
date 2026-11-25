@@ -19,28 +19,29 @@ print("connexion ouverte")
 
 
 def ajouter_au_journal(source, libelle, outil, duree):
-  journal.append([source, libelle, outil, duree, "ok"])
+    journal.append([source, libelle, outil, duree, "ok"])
+
 
 def jouer_sql(fichier, libelle):
-  debut = time.time()
-  with open("sql/" + fichier, encoding="utf-8") as f:
-    requete = f.read()
-  curseur.execute(requete)
-  duree = round(time.time() - debut, 1)
-  ajouter_au_journal(fichier, libelle, "SQL", duree)
-  print(" [SQL]", libelle, "-", duree, "s")
+    debut = time.time()
+    with open("sql/" + fichier, encoding="utf-8") as f:
+        requete = f.read()
+    curseur.execute(requete)
+    duree = round(time.time() - debut, 1)
+    ajouter_au_journal(fichier, libelle, "SQL", duree)
+    print(" [SQL]", libelle, "-", duree, "s")
 
 
 def charger_table(df, table, source_journal, libelle, debut=None):
-  if debut is None:
-    debut = time.time()
-  tampon = io.StringIO()
-  df.to_csv(tampon, index=False, header=False)
-  tampon.seek(0)
-  curseur.copy_expert(f"COPY {table} FROM STDIN WITH (FORMAT csv)", tampon)
-  duree = round(time.time() - debut, 1)
-  ajouter_au_journal(source_journal, libelle, "Python", duree)
-  print(" [PYTHON]", len(df), "lignes chargees dans", table)
+    if debut is None:
+        debut = time.time()
+    tampon = io.StringIO()
+    df.to_csv(tampon, index=False, header=False)
+    tampon.seek(0)
+    curseur.copy_expert(f"COPY {table} FROM STDIN WITH (FORMAT csv)", tampon)
+    duree = round(time.time() - debut, 1)
+    ajouter_au_journal(source_journal, libelle, "Python", duree)
+    print(" [PYTHON]", len(df), "lignes chargees dans", table)
 
 
 # 01_init.sql
@@ -66,7 +67,7 @@ journal = []
 controles = []
 
 for fichier, libelle in etapes_avant:
-  jouer_sql(fichier, libelle)
+    jouer_sql(fichier, libelle)
 
 # Contrôle intermédiaire
 verification = pd.read_sql(
@@ -77,14 +78,14 @@ print(" controle : clean_fact_sinistre =", verification["n"][0], "lignes")
 # 2. Partie Python : Météo (JSON) + Villes (CSV)
 debut_meteo = time.time()
 with open("donnees/meteo_30_villes.json", encoding="utf-8") as f:
-  meteo_brute = json.load(f)
+    meteo_brute = json.load(f)
 
 morceaux = []
 for localisation in meteo_brute:
-  tableau = pd.DataFrame(localisation["daily"])
-  tableau["latitude"] = localisation["latitude"]
-  tableau["longitude"] = localisation["longitude"]
-  morceaux.append(tableau)
+    tableau = pd.DataFrame(localisation["daily"])
+    tableau["latitude"] = localisation["latitude"]
+    tableau["longitude"] = localisation["longitude"]
+    morceaux.append(tableau)
 meteo = pd.concat(morceaux, ignore_index=True)
 
 charger_table(
@@ -113,12 +114,12 @@ etapes_apres = [
 ]
 
 for fichier, libelle in etapes_apres:
-  jouer_sql(fichier, libelle)
+    jouer_sql(fichier, libelle)
 
 # Sauvegarde du journal global
 suivi = pd.DataFrame(
-       journal, columns=["fichier", "etape", "outil", "secondes", "statut"]
-   )
+    journal, columns=["fichier", "etape", "outil", "secondes", "statut"]
+)
 
 suivi.to_csv(
     "sorties/journal_pipeline.csv",
@@ -145,7 +146,7 @@ controles = pd.read_sql(
 print()
 print("CONTROLES")
 for colonne in controles.columns:
-  print("   ", colonne, ":", controles[colonne][0])
+    print("   ", colonne, ":", controles[colonne][0])
 
 controles.to_csv(
     "sorties/controles.csv",
@@ -159,3 +160,6 @@ curseur.close()
 connexion.close()
 
 print("Pipeline terminé avec succès !")
+
+
+

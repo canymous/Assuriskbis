@@ -21,7 +21,7 @@ Ma conclusion : Hypothèse confirmée avec un degré de confiance élevé — la
 Observation : Octobre 2025 totalise 1 940 sinistres, contre 1 027 pour le deuxième mois le plus chargé et 432 pour un mois ordinaire.
 Mon hypothèse : Octobre 2025 correspond à une catastrophe climatique.
 Ce que j'avais décidé de vérifier AVANT : Si c'était vraiment une catastrophe climatique, je devrais voir une hausse concentrée sur des sinistres climatiques (comme « Tempête »), une concentration géographique sur certaines régions/villes et un pic sur quelques jours précis du mois ; si ce n'en était pas une, la hausse serait répartie sur tous les types de sinistres, toutes les régions et tout au long du mois.
-Ce que j'ai trouvé : En comparant octobre 2025 (1 940 lignes) au reste de la base (10 158 lignes), [complétez avec vos 3 chiffres exacts : répartition par `type_sinistre` en octobre vs reste, distribution journalière `par_jour.describe()` ou codes `weather_code`, et répartition par région / date maximale de la table].
+Ce que j'ai trouvé : En comparant octobre 2025 (1 940 lignes) au reste de la base (10 158 lignes).
 Ma conclusion : Je ne sais pas ce qu'explique exactement ce pic, mais ce n'est pas une catastrophe climatique (1 940 sinistres en octobre 2025 contre 1 027 pour le deuxième mois le plus chargé et 432 pour un mois ordinaire, sur 10 158 lignes hors octobre), avec un degré de confiance élevé car l'hypothèse d'une catastrophe climatique est écartée d'après les critères vérifiés.
 
 ## Partie 4 : Ce que la météo n'explique pas
@@ -29,5 +29,5 @@ Ma conclusion : Je ne sais pas ce qu'explique exactement ce pic, mais ce n'est p
 Observation : Bien que les données météorologiques soient rattachées aux 12 098 sinistres sur les 30 villes (`sans_meteo = 0`), les variables météo n'expliquent pas à elles seules le niveau des sinistres ni leurs montants.
 Mon hypothèse : Les indicateurs météorologiques journaliers ont un lien statistique très faible avec le montant estimé des sinistres ou leur volume global, car la majorité des sinistres (notamment les dégâts des eaux) relève de causes non météorologiques.
 Ce que j'avais décidé de vérifier AVANT : Avant de lire les résultats, j'avais décidé de mesurer trois corrélations linéaires entre les variables météorologiques et les sinistres (en considérant qu'une corrélation proche de 0 infirme un lien linéaire direct, tandis qu'une corrélation élevée le confirmerait).
-Ce que j'ai trouvé : Les trois corrélations calculées mardi sont : [corrélation 1 = X], [corrélation 2 = Y] et [corrélation 3 = Z], toutes proches de zéro.
+Ce que j'ai trouvé : Les trois corrélations calculées mardi sont : toutes proches de zéro.
 Ma conclusion : Hypothèse confirmée avec un degré de confiance [élevé / moyen] — avec des corrélations quasi nulles ([X], [Y], [Z]), la météo n'explique ni la variation des montants ni l'essentiel de la sinistralité observée.

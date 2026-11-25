@@ -1,116 +1,98 @@
 --
---Question 1
---
-SELECT * FROM fact_sinistre_meteo LIMIT 20;
---Afficher, pour chaque région, les trois sinistres dont le montant estimé est le plus élevé.
---region_sinistre | rang | sinistre_id | type_sinistre | montant_estime
-
-select fsm.region_sinistre  , row_number() over (partition by fsm.montant_estime order by fsm.montant_estime ), fsm.sinistre_id , fsm.type_sinistre , fsm.montant_estime  
-from fact_sinistre_meteo fsm 
-
-with sinistre_meteo as (
-    select  
-        region_sinistre, 
+-- =====================================================================
+-- QUESTION 1 : Les trois sinistres les plus chers de chaque région
+-- Colonnes : region_sinistre | rang | sinistre_id | type_sinistre | montant_estime
+-- Vérification : 36 lignes (12 régions x 3)
+-- =====================================================================
+WITH sinistre_meteo AS (
+    SELECT
+        region_sinistre,
+        ROW_NUMBER() OVER (
+            PARTITION BY region_sinistre
+            ORDER BY montant_estime DESC
+        ) AS rang,
         sinistre_id,
         type_sinistre,
-        montant_estime,
-        row_number() over (partition by region_sinistre order by montant_estime desc) as rang
-    from fact_sinistre_meteo fsm
+        montant_estime
+    FROM fact_sinistre_meteo
 )
-select 
-    region_sinistre, 
-    sinistre_id, 
-    type_sinistre, 
-    montant_estime,
-    rang
-from sinistre_meteo
-where rang <= 3;
+SELECT
+    region_sinistre,
+    rang,
+    sinistre_id,
+    type_sinistre,
+    montant_estime
+FROM sinistre_meteo
+WHERE rang <= 3
+ORDER BY region_sinistre, rang;
 
---
---Question 2
---
 
---Afficher chaque sinistre avec, à côté, la moyenne des montants de son type, et l’écart entre son montant et cette moyenne.
-
-select 
+-- =====================================================================
+-- QUESTION 2 : L'écart entre un sinistre et la moyenne de son type
+-- Colonnes : sinistre_id | type_sinistre | montant_estime | moyenne_du_type | ecart
+-- Vérification : 12 098 lignes ; 1re ligne = 1 | Dégât des eaux | 2070.00 | 4478 | -2408
+-- =====================================================================
+SELECT
     sinistre_id,
     type_sinistre,
     montant_estime,
-    round(avg(montant_estime) over (partition by type_sinistre)) as moyenne_du_type,
-    round(montant_estime - avg(montant_estime) over (partition by type_sinistre)) as ecart
-from fact_sinistre_meteo
-order by  sinistre_id;
+    ROUND(AVG(montant_estime) OVER (PARTITION BY type_sinistre)) AS moyenne_du_type,
+    ROUND(montant_estime - AVG(montant_estime) OVER (PARTITION BY type_sinistre)) AS ecart
+FROM fact_sinistre_meteo
+ORDER BY sinistre_id;
 
---
---Question 3 : La part de chaque région dans le total
---
 
-with par_region as (
-    select  
-        region_sinistre,
-        count(*) as nb
-    from fact_sinistre_meteo
-    group by region_sinistre
-)
-select 
-    region_sinistre,
-    nb,
-    round (nb * 100.0 / sum (nb) over (), 1) as pct
-from par_region
-order by nb desc;
-
--- Suite de la QUESTION 3 : Ajout du pourcentage cumulé
+-- =====================================================================
+-- QUESTION 3 : La part de chaque région dans le total (+ bonus cumulé)
+-- Colonnes : region_sinistre | nb | pct (| pct_cumule)
+-- Vérification : 12 lignes ; somme manuelle de pct = 99,9 ; pct_cumule final = 100,0
+-- =====================================================================
 WITH par_region AS (
-    SELECT 
+    SELECT
         region_sinistre,
         COUNT(*) AS nb
     FROM fact_sinistre_meteo
     GROUP BY region_sinistre
-),
-pourcentages AS (
-    SELECT 
-        region_sinistre,
-        nb,
-        ROUND(nb * 100.0 / SUM(nb) OVER (), 1) AS pct
-    FROM par_region
 )
-SELECT 
+SELECT
     region_sinistre,
     nb,
-    pct,
-    ROUND(SUM(pct) OVER (ORDER BY nb DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 1) AS pct_cumule
-FROM pourcentages
+    ROUND(nb * 100.0 / SUM(nb) OVER (), 1) AS pct,
+    ROUND(SUM(nb) OVER (ORDER BY nb DESC) * 100.0 / SUM(nb) OVER (), 1) AS pct_cumule
+FROM par_region
 ORDER BY nb DESC;
 
---
--- QUESTION 4 : Le type de sinistre le plus fréquent de chaque ville
---
 
-with compte as (
-    select  
+-- =====================================================================
+-- QUESTION 4 : Le type de sinistre le plus fréquent de chaque ville
+-- Colonnes : ville_sinistre | type_sinistre | nb
+-- Vérification : 30 lignes (1 par ville)
+-- =====================================================================
+WITH compte AS (
+    SELECT
         ville_sinistre,
         type_sinistre,
-        count (*) as nb
-    from fact_sinistre_meteo
-    group by ville_sinistre, type_sinistre
+        COUNT(*) AS nb
+    FROM fact_sinistre_meteo
+    GROUP BY ville_sinistre, type_sinistre
 ),
-classement as (
-    select  
+classement AS (
+    SELECT
         ville_sinistre,
         type_sinistre,
         nb,
-        row_number() over (
-            partition by ville_sinistre 
-            order by nb desc
-        ) as rang
-    from compte
+        ROW_NUMBER() OVER (
+            PARTITION BY ville_sinistre
+            ORDER BY nb DESC
+        ) AS rang
+    FROM compte
 )
-select 
+SELECT
     ville_sinistre,
     type_sinistre,
     nb
-from classement
-where rang = 1
-order by nb desc;
+FROM classement
+WHERE rang = 1
+ORDER BY nb DESC;
 
 

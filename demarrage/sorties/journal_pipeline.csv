@@ -1,9 +1,9 @@
-﻿fichier;etape;outil;secondes
-01_init.sql;Reinitialiser la base;SQL;76,7
-02_clean.sql;Construire la couche propre;SQL;21,9
-03_tables_meteo.sql;Creer les tables qui attendent la meteo;SQL;0,1
-meteo_json;Chargement meteo Python;Python;0,4
-villes_csv;Chargement villes Python;Python;0,0
-04_rattachement.sql;Rattachement meteo et villes;SQL;0,1
-05_croisement.sql;Croisement sinistres et meteo;SQL;0,2
-06_controles.sql;Verifier la qualite des donnees;SQL;0,0
+﻿fichier;etape;outil;secondes;statut
+01_init.sql;Reinitialiser la base;SQL;66,2;ok
+02_clean.sql;Construire la couche propre;SQL;15,6;ok
+03_tables_meteo.sql;Creer les tables qui attendent la meteo;SQL;0,1;ok
+meteo_json;Chargement meteo Python;Python;0,3;ok
+villes_csv;Chargement villes Python;Python;0,0;ok
+04_rattachement.sql;Rattachement meteo et villes;SQL;0,2;ok
+05_croisement.sql;Croisement sinistres et meteo;SQL;0,3;ok
+06_controles.sql;Verifier la qualite des donnees;SQL;0,1;ok

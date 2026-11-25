@@ -146,6 +146,10 @@ occ_reg = octobre["region_sinistre"].value_counts(normalize=True).mul(100).round
 # Calcul de la répartition géographique en pourcentage (%) pour le reste
 reste_reg = reste["region_sinistre"].value_counts(normalize=True).mul(100).round(1)
 
+# Corrélations
+df[["montant_estime", "precipitation_sum",
+"wind_gusts_10m_max", "temperature_2m_max"]].corr()
+
 # Regroupement dans un même tableau pour comparer côte à côte
 comparaison_regions = pd.DataFrame({
     "Octobre (%)": occ_reg,
